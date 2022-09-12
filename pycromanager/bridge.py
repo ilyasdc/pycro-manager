@@ -730,8 +730,9 @@ def _check_single_method_spec(method_spec, fn_args):
     for arg_java_type, arg_val in zip(method_spec["arguments"], fn_args):
         if isinstance(arg_val, _JavaObjectShadow):
             if arg_java_type not in arg_val._interfaces:
-                # check that it shadows object of the correct type
-                return False
+                if not (arg_java_type == 'java.lang.Iterable' and hasattr(arg_val,'iterator')):
+                    # check that it shadows object of the correct type
+                    return False
         elif type(arg_val) == np.ndarray:
             # For ND Arrays, need to make sure data types match
             if (
